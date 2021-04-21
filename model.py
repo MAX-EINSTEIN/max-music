@@ -4,7 +4,7 @@
 import os
 import pprint
 from tinytag import TinyTag
-import pygame
+from PyQt5.QtWidgets import QStyle
 
 
 class MaxMusicModel():
@@ -12,11 +12,9 @@ class MaxMusicModel():
 
     def __init__(self) -> None:
         """Initialises MaxMusicModel"""
-        self._music_path = "D:/MAX_EINSTEIN/Music/Black Panther album/"
         self.printer = pprint.PrettyPrinter(indent=4)
 
-        pygame.mixer.init()
-        self.is_playing = False
+        self._music_path = "D:/MAX_EINSTEIN/Music/Black Panther album/"
 
         all_files = os.listdir(self._music_path)
         self.all_song_files = [os.path.join(self._music_path, song) for song
@@ -27,26 +25,21 @@ class MaxMusicModel():
 
         all_songs = []
         for tag in all_song_tags:
+            duration = tag.duration
             data = [tag.title, tag.artist, tag.album,
-                    tag.year, f'{tag.duration:.2f}']
+                    tag.year, self.format_duration(duration)]
             data = list(map(lambda x: "Unknown" if x is None else x, data))
             self.printer.pprint(data)   # [DEBUG]
             all_songs.append(data)
 
         return all_songs
 
-    def playSong(self, index) -> None:
-        song = self.all_song_files[index]
-
-        if self.is_playing:
-            print('Pause song:', song)
-            pygame.mixer.music.pause()
-            self.is_playing = False
-        else:
-            print('Playing song:', song)
-            pygame.mixer.music.load(song)
-            pygame.mixer.music.play(loops=0)
-            self.is_playing = True
-
-    def adjustVolume(self, percent: float) -> None:
-        pygame.mixer.music.set_volume(0.01 * percent)
+    def format_duration(self, duration: str) -> str:
+        dur = round(float(duration))
+        mins = dur//60
+        secs = dur % 60
+        return (f'{mins:2d}:{secs:2d}').replace(' ', '0')
+    
+    def duration_in_seconds(self, duration:str) -> int:
+        mins, secs = list(map(int, duration.split(':')))
+        return mins*60 + secs
