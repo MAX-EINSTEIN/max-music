@@ -59,10 +59,10 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
           <item>
-           <widget class="QLineEdit" name="search_yt_lineedit"/>
+           <widget class="QLineEdit" name="search_le"/>
           </item>
           <item>
-           <widget class="QPushButton" name="search_yt_button">
+           <widget class="QPushButton" name="search_btn">
             <property name="text">
              <string>SEARCH</string>
             </property>
@@ -71,7 +71,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QListWidget" name="search_yt_list">
+         <widget class="QListWidget" name="search_lw">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -94,7 +94,7 @@
          <string>All Songs</string>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_songs">
          <property name="statusTip">
@@ -120,7 +120,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QTableView" name="tableView"/>
+           <widget class="QTableView" name="songs_tv"/>
           </item>
          </layout>
         </widget>
@@ -148,7 +148,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QListWidget" name="listWidget"/>
+           <widget class="QListWidget" name="playlists_lw"/>
           </item>
          </layout>
         </widget>
@@ -179,7 +179,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QTableView" name="tableView_2"/>
+           <widget class="QTableView" name="downloads_tv"/>
           </item>
          </layout>
         </widget>
@@ -303,7 +303,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="toolButton_2">
+          <widget class="QToolButton" name="previous_btn">
            <property name="text">
             <string>Previous</string>
            </property>
@@ -380,7 +380,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QSlider" name="horizontalSlider">
+          <widget class="QSlider" name="vol_slider">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
