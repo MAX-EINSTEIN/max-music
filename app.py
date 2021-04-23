@@ -5,9 +5,9 @@
 
 import sys
 from PyQt5 import QtWidgets
-from max_music_ui import MaxMusicUI
-from controller import MaxMusicController
-from model import MaxMusicModel
+from view.mainwindow_view import MaxMusicUI
+from controller.controller import MaxMusicController
+from model.model import MaxMusicModel
 
 
 if __name__ == '__main__':

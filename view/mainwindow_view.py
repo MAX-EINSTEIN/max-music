@@ -4,8 +4,9 @@
 
 
 from PyQt5.QtWidgets import QMainWindow
+from PyQt5 import QtGui
 # from PyQt5 import uic
-from main_window_ui import Ui_MainWindow
+from view.mainwindow_ui import Ui_MainWindow
 
 __version__ = '0.1.0'
 __author__ = 'Junaid Siddiqui'
@@ -25,3 +26,7 @@ class MaxMusicUI(QMainWindow, Ui_MainWindow):
         # uic.loadUi('resources/mainwindow.ui', self)
 
         # Map objectNames for Ui elements to variables
+
+        
+
+    

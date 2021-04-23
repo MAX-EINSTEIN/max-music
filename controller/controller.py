@@ -1,6 +1,8 @@
 # Filename: controller.py
 
 """Max Music is a Music Player built using Python and PyQt5."""
+
+
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QLabel, QTableWidgetItem, QTableWidget,\
     QToolButton, QSlider, QStyle
@@ -8,8 +10,8 @@ from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QPixmap
 
-from max_music_ui import MaxMusicUI
-from model import MaxMusicModel
+from view.mainwindow_view import MaxMusicUI
+from model.model import MaxMusicModel
 
 import random
 
@@ -24,8 +26,8 @@ class MaxMusicController:
 
         # Songs Table Widget
         self.col_count = 5
-        self.songs_tw: QTableWidget = self._view.songs_tv
-        self.populateSongsTable()
+        self.songs_tw: QTableWidget = self._view.songs_tw
+        self.populate_songs_table()
 
         # Music Controls
         self.shuffle_btn: QToolButton = self._view.shuffle_btn
@@ -63,7 +65,8 @@ class MaxMusicController:
         # Connect signals and slots
         self._connectSignals()
 
-    def _connectSignals(self) -> None:
+
+    def _connectSignals(self) -> None:        
         # Music Controls
         self.shuffle_btn.clicked.connect(lambda: self.shuffle())
         self.prev_btn.clicked.connect(lambda: self.previous())
@@ -78,11 +81,14 @@ class MaxMusicController:
         self._player.positionChanged.connect(self.position_changed)
         self._player.durationChanged.connect(self.duration_changed)
         self.pb_slider.sliderMoved.connect(self.set_position)
+        self.pb_slider.valueChanged.connect(self.check_progress)
+
 
     def shuffle(self):
         random.shuffle(self._model.all_song_files)
-        self.populateSongsTable()
+        self.populate_songs_table()
         self.play()
+
 
     def previous(self) -> None:
         if(self._index > 0):
@@ -92,6 +98,7 @@ class MaxMusicController:
         self.songs_tw.selectRow(self._index)
         self._player_state = QMediaPlayer.PausedState
         self.play()
+
 
     def play(self) -> None:
         self.ct_milli = 0
@@ -118,6 +125,7 @@ class MaxMusicController:
 
         self.et_label.setText(self.songs_tw.item(self._index, 4).text())
 
+
     def next(self) -> None:
         if(self._index < len(self._model.all_song_files) - 1):
             self._index += 1
@@ -127,12 +135,15 @@ class MaxMusicController:
         self._player_state = QMediaPlayer.PausedState
         self.play()
 
+
     def loop(self) -> None:
         self._loop = not self._loop
         print('Loop:', self._loop)
 
+
     def changeVolume(self, value: int) -> None:
         self._player.setVolume(value)
+
 
     def mediastate_changed(self, state: QMediaPlayer.State):
         if state == QMediaPlayer.PlayingState:
@@ -142,25 +153,40 @@ class MaxMusicController:
             self.pp_btn.setIcon(
                 self._view.style().standardIcon(QStyle.SP_MediaPlay))
 
+
     def position_changed(self, position):
         self.pb_slider.setValue(position)
         time = self._model.format_duration(str(position/1000))
         self.ct_label.setText(time)
 
+
     def duration_changed(self, duration):
         self.pb_slider.setRange(0, duration)
+
 
     def set_position(self, position):
         self._player.setPosition(position)
 
-    def populateSongsTable(self) -> None:
+    def check_progress(self, value):
+        if self.pb_slider.maximum() == value:
+            self.next()
+
+
+    def songs_tw_item_selected(self, row:int, col:int) -> None:
+        self.songs_tw.selectRow(row)
+
+
+    def populate_songs_table(self) -> None:
         data = self._model.list_all_songs()
 
         self.songs_tw.setRowCount(len(data))
         self.songs_tw.setColumnCount(self.col_count)
 
-        self.songs_tw.setHorizontalHeaderLabels(
-            ['Name', 'Artists', 'Albums', 'Year', 'Duration (s)'])
+        self.songs_tw.setColumnWidth(0, 260)
+        self.songs_tw.setColumnWidth(1, 200)
+        self.songs_tw.setColumnWidth(2, 160)
+        self.songs_tw.setColumnWidth(3, 80)
+        self.songs_tw.setColumnWidth(4, 85) 
 
         for m in range(0, len(data)):
             for n in range(0, self.col_count):
@@ -169,8 +195,12 @@ class MaxMusicController:
                                  QtCore.Qt.ItemIsEnabled)
                 self.songs_tw.setItem(m, n, newitem)
 
-        self.songs_tw.resizeColumnsToContents()
-        self.songs_tw.resizeRowsToContents()
+        # self.songs_tw.resizeColumnsToContents()
+        # self.songs_tw.resizeRowsToContents()
 
         self._index = 0
         self.songs_tw.selectRow(self._index)
+
+    # def songs_tw_resized(self, event):
+    #     print('Resized')
+    #     self.songs_tw.windowHandle().resizeEvent(event)
